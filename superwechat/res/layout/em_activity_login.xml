@@ -5,18 +5,7 @@
     android:background="#eff2f6"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:src="@drawable/em_welcom_logo" />
-    </RelativeLayout>
+    <include layout="@layout/common_title"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -95,6 +84,7 @@
             android:orientation="horizontal" >
 
             <Button
+                android:id="@+id/btn_register"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -102,7 +92,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/em_button_register_bg"
                 android:gravity="center"
-                android:onClick="register"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
                 android:text="@string/register"
@@ -110,6 +99,7 @@
                 android:textSize="18sp" />
 
             <Button
+                android:id="@+id/btn_login"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dip"
@@ -117,7 +107,6 @@
                 android:layout_weight="1"
                 android:background="@drawable/em_button_login_bg"
                 android:gravity="center"
-                android:onClick="login"
                 android:paddingBottom="7dp"
                 android:paddingTop="7dp"
                 android:text="@string/login"
