@@ -1305,7 +1305,6 @@ public class SuperWeChatHelper {
             }
             return;
         }
-
         appContactList = aContactList;
     }
 
