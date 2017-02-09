@@ -32,8 +32,10 @@ import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.domain.Result;
 import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.DisplayUtils;
+import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.utils.ResultUtils;
 
@@ -101,7 +103,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void registerAppService() {
-        NetDao.register(this, username, nick, pwd, new OkHttpUtils.OnCompleteListener<String>() {
+        NetDao.register(this, username, nick, pwd, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String str) {
                 if (str != null) {
@@ -142,7 +144,7 @@ public class RegisterActivity extends BaseActivity {
             public void run() {
                 try {
                     // call method in SDK
-                    EMClient.getInstance().createAccount(username, pwd);
+                    EMClient.getInstance().createAccount(username, MD5.getMessageDigest(pwd));
                     runOnUiThread(new Runnable() {
                         public void run() {
                             if (!RegisterActivity.this.isFinishing())
@@ -179,7 +181,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void unRegisterAppServer() {
-        NetDao.unRegister(this, username, new OkHttpUtils.OnCompleteListener<String>() {
+        NetDao.unRegister(this, username, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String result) {
                 Log.e("main","unRegisterApp(),result:"+result);

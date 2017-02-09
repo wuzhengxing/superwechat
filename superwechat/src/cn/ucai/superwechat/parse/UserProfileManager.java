@@ -1,18 +1,27 @@
 package cn.ucai.superwechat.parse;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.domain.Result;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.utils.PreferenceManager;
+import cn.ucai.superwechat.utils.ResultUtils;
+
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserProfileManager {
-
+	private static final String TAG = "UserProfileManager";
 	/**
 	 * application context
 	 */
@@ -139,7 +148,7 @@ public class UserProfileManager {
 		return avatarUrl;
 	}
 
-	public void asyncGetCurrentUserInfo() {
+	public void asyncGetCurrentUserInfo(Activity activity) {
 		ParseManager.getInstance().asyncGetCurrentUserInfo(new EMValueCallBack<EaseUser>() {
 
 			@Override
@@ -152,6 +161,23 @@ public class UserProfileManager {
 
 			@Override
 			public void onError(int error, String errorMsg) {
+
+			}
+		});
+		Log.e(TAG,"username:"+EMClient.getInstance().getCurrentUser());
+		NetDao.getUserInfoByUserName(activity, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String str) {
+				if(str!=null){
+					Result result = ResultUtils.getResultFromJson(str, User.class);
+					if(result!=null && result.isRetMsg()){
+						Log.e(TAG,"result:"+result);
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
 
 			}
 		});

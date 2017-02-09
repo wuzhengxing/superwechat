@@ -43,6 +43,7 @@ import cn.ucai.superwechat.domain.Result;
 import cn.ucai.superwechat.net.NetDao;
 import cn.ucai.superwechat.utils.CommonUtils;
 import cn.ucai.superwechat.utils.DisplayUtils;
+import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.OkHttpUtils;
 import cn.ucai.superwechat.utils.ResultUtils;
 
@@ -154,46 +155,14 @@ public class LoginActivity extends BaseActivity {
         final long start = System.currentTimeMillis();
         // call login method
         Log.d(TAG, "EMClient.getInstance().login");
-        loginAppServer();
+        loginEMServer();
+
     }
 
-    private void loginAppServer() {
-        NetDao.login(this, currentUsername, currentPassword, new OkHttpUtils.OnCompleteListener<String>() {
-            @Override
-            public void onSuccess(String str) {
-                if (str != null) {
-                    Result result = ResultUtils.getResultFromJson(str, User.class);
-                    if(result!=null){
-                        if(result.isRetMsg()){
-                            loginEMServer();
-                        }else {
-                            pd.dismiss();
-                            if(result.getRetCode()== I.MSG_LOGIN_UNKNOW_USER){
-                                CommonUtils.showShortToast("账号不存在");
-                            }else {
-                                CommonUtils.showShortToast("账户密码错误");
-                            }
-                        }
-                    }else {
-                        pd.dismiss();
-                        CommonUtils.showShortToast(R.string.Login_failed);
-                    }
-                } else {
-                    pd.dismiss();
-                    CommonUtils.showShortToast(R.string.Login_failed);
-                }
-            }
 
-            @Override
-            public void onError(String error) {
-                pd.dismiss();
-                CommonUtils.showShortToast(R.string.Login_failed);
-            }
-        });
-    }
 
     private void loginEMServer() {
-        EMClient.getInstance().login(currentUsername, currentPassword, new EMCallBack() {
+        EMClient.getInstance().login(currentUsername, MD5.getMessageDigest(currentPassword), new EMCallBack() {
 
             @Override
             public void onSuccess() {
@@ -215,7 +184,7 @@ public class LoginActivity extends BaseActivity {
                     pd.dismiss();
                 }
                 // get user's info (this should be get from App's server or 3rd party service)
-                SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo();
+                SuperWeChatHelper.getInstance().getUserProfileManager().asyncGetCurrentUserInfo(LoginActivity.this);
 
                 Intent intent = new Intent(LoginActivity.this,
                         MainActivity.class);
@@ -223,6 +192,7 @@ public class LoginActivity extends BaseActivity {
 
                 finish();
             }
+
 
             @Override
             public void onProgress(int progress, String status) {
