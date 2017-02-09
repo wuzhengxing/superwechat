@@ -48,6 +48,7 @@ import com.hyphenate.easeui.controller.EaseUI.EaseEmojiconInfoProvider;
 import com.hyphenate.easeui.domain.EaseEmojicon;
 import com.hyphenate.easeui.domain.EaseEmojiconGroupEntity;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseNotifier;
 import com.hyphenate.easeui.model.EaseNotifier.EaseNotificationInfoProvider;
@@ -84,6 +85,8 @@ public class SuperWeChatHelper {
     protected EMMessageListener messageListener = null;
 
 	private Map<String, EaseUser> contactList;
+
+	private Map<String, User> appContactList;
 
 	private Map<String, RobotUser> robotList;
 
@@ -931,7 +934,48 @@ public class SuperWeChatHelper {
         
         return contactList;
     }
-    
+	/**
+	 * update contact list
+	 *
+	 * @param aContactList
+	 */
+	public void setAppContactList(Map<String, User> aContactList) {
+		if(aContactList == null){
+		    if (appContactList != null) {
+		        appContactList.clear();
+		    }
+			return;
+		}
+
+		appContactList = aContactList;
+	}
+
+	/**
+     * save single contact
+     */
+    public void saveAppContact(User user){
+    	getAppContactList().put(user.getMUserName(), user);
+    	superWeChatModel.saveAppContact(user);
+    }
+
+    /**
+     * get contact list
+     *
+     * @return
+     */
+    public Map<String, User> getAppContactList() {
+        if (isLoggedIn() && appContactList == null) {
+            appContactList = superWeChatModel.getAppContactList();
+        }
+
+        // return a empty non-null object to avoid app crash
+        if(appContactList == null){
+        	return new Hashtable<String, User>();
+        }
+
+        return appContactList;
+    }
+
     /**
      * set current username
      * @param username
