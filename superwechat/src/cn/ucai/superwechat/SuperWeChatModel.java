@@ -6,6 +6,7 @@ import cn.ucai.superwechat.db.UserDao;
 import cn.ucai.superwechat.domain.RobotUser;
 import cn.ucai.superwechat.utils.PreferenceManager;
 import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.model.EaseAtMessageHelper;
 
 import java.util.ArrayList;
@@ -38,7 +39,22 @@ public class SuperWeChatModel {
         UserDao dao = new UserDao(context);
         dao.saveContact(user);
     }
-    
+    public boolean saveAppContactList(List<User> contactList) {
+        UserDao dao = new UserDao(context);
+        dao.saveAppContactList(contactList);
+        return true;
+    }
+
+    public Map<String, User> getAppContactList() {
+        UserDao dao = new UserDao(context);
+        return dao.getAppContactList();
+    }
+
+    public void saveAppContact(User user){
+        UserDao dao = new UserDao(context);
+        dao.saveAppContact(user);
+    }
+
     /**
      * save current username
      * @param username
