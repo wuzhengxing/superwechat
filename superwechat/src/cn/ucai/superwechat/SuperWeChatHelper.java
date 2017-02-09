@@ -934,47 +934,6 @@ public class SuperWeChatHelper {
         
         return contactList;
     }
-	/**
-	 * update contact list
-	 *
-	 * @param aContactList
-	 */
-	public void setAppContactList(Map<String, User> aContactList) {
-		if(aContactList == null){
-		    if (appContactList != null) {
-		        appContactList.clear();
-		    }
-			return;
-		}
-
-		appContactList = aContactList;
-	}
-
-	/**
-     * save single contact
-     */
-    public void saveAppContact(User user){
-    	getAppContactList().put(user.getMUserName(), user);
-    	superWeChatModel.saveAppContact(user);
-    }
-
-    /**
-     * get contact list
-     *
-     * @return
-     */
-    public Map<String, User> getAppContactList() {
-        if (isLoggedIn() && appContactList == null) {
-            appContactList = superWeChatModel.getAppContactList();
-        }
-
-        // return a empty non-null object to avoid app crash
-        if(appContactList == null){
-        	return new Hashtable<String, User>();
-        }
-
-        return appContactList;
-    }
 
     /**
      * set current username
@@ -1317,7 +1276,8 @@ public class SuperWeChatHelper {
         isBlackListSyncedWithServer = false;
 
         isGroupAndContactListenerRegisted = false;
-        
+
+        setAppContactList(null);
         setContactList(null);
         setRobotList(null);
         getUserProfileManager().reset();
@@ -1330,6 +1290,62 @@ public class SuperWeChatHelper {
 
     public void popActivity(Activity activity) {
         easeUI.popActivity(activity);
+    }
+
+
+    /**
+     * update contact list
+     *
+     * @param aContactList
+     */
+    public void setAppContactList(Map<String, User> aContactList) {
+        if(aContactList == null){
+            if (appContactList != null) {
+                appContactList.clear();
+            }
+            return;
+        }
+
+        appContactList = aContactList;
+    }
+
+    /**
+     * save single contact
+     */
+    public void saveAppContact(User user){
+        getAppContactList().put(user.getMUserName(), user);
+        superWeChatModel.saveAppContact(user);
+    }
+
+    /**
+     * get contact list
+     *
+     * @return
+     */
+    public Map<String, User> getAppContactList() {
+        if (isLoggedIn() && appContactList == null) {
+            appContactList = superWeChatModel.getAppContactList();
+        }
+
+        // return a empty non-null object to avoid app crash
+        if(appContactList == null){
+            return new Hashtable<String, User>();
+        }
+
+        return appContactList;
+    }
+    /**
+     * update user list to cache and database
+     *
+     * @param contactInfoList
+     */
+    public void updateAppContactList(List<User> contactInfoList) {
+        for (User u : contactInfoList) {
+            appContactList.put(u.getMUserName(), u);
+        }
+        ArrayList<User> mList = new ArrayList<User>();
+        mList.addAll(appContactList.values());
+        superWeChatModel.saveAppContactList(mList);
     }
 
 }
