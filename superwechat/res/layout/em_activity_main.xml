@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/layout_title"
-        layout="@layout/common_title" />
+        layout="@layout/view_layout" />
 
     <cn.ucai.superwechat.widget.MFViewPager
         android:id="@+id/layout_viewpage"
@@ -28,6 +28,7 @@
             android:layout_height="1dp"
             android:background="#D6DCDC"/>
         <cn.ucai.superwechat.widget.DMTabHost
+            android:id="@+id/layout_tabHost"
             android:layout_width="match_parent"
             android:layout_height="47dp"
             android:paddingBottom="1dp">
@@ -36,14 +37,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawableTop="@drawable/tab_weixin"
-                app:tabText="@string/app_name">
+                app:tabtext="@string/app_name">
             </cn.ucai.superwechat.widget.DMTabButton>
             <cn.ucai.superwechat.widget.DMTabButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawableTop="@drawable/tab_contact_list"
-                app:tabText="@string/contacts">
+                app:tabtext="@string/contacts">
             </cn.ucai.superwechat.widget.DMTabButton>
 
             <cn.ucai.superwechat.widget.DMTabButton
@@ -51,7 +52,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawableTop="@drawable/tab_find"
-                app:tabText="@string/discover">
+                app:tabtext="@string/discover">
             </cn.ucai.superwechat.widget.DMTabButton>
 
             <cn.ucai.superwechat.widget.DMTabButton
@@ -59,7 +60,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawableTop="@drawable/tab_profile"
-                app:tabText="@string/me">
+                app:tabtext="@string/me">
             </cn.ucai.superwechat.widget.DMTabButton>
         </cn.ucai.superwechat.widget.DMTabHost>
     </LinearLayout>
