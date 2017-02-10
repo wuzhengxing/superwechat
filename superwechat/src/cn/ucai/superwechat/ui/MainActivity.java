@@ -158,8 +158,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
     private void initFragment() {
         conversationListFragment = new ConversationListFragment();
         contactListFragment = new ContactListFragment();
-        SettingsFragment settingFragment = new SettingsFragment();
-        fragments = new Fragment[]{conversationListFragment, contactListFragment, settingFragment};
+        ProfileFragment profileFragment=new ProfileFragment();
 
 		/*getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, conversationListFragment)
                 .add(R.id.fragment_container, contactListFragment).hide(contactListFragment).show(conversationListFragment)
@@ -168,7 +167,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         adapter.addFragment(conversationListFragment, "微信");
         adapter.addFragment(contactListFragment, "通讯录");
         adapter.addFragment(new DiscoverFragment(), "发现");
-        adapter.addFragment(settingFragment, "我");
+        adapter.addFragment(profileFragment, "我");
         layoutViewpage.setAdapter(adapter);
         layoutViewpage.setCurrentItem(0);
         Log.e(TAG, "initFragment");
@@ -225,7 +224,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * @param view
      */
     public void onTabClicked(View view) {
-       /* switch (view.getId()) {
+        /*switch (view.getId()) {
             case R.id.btn_conversation:
                 index = 0;
                 break;
@@ -355,7 +354,6 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 
     @Override
     public void onPageSelected(int i) {
-
         layoutTabHost.setChecked(i);
     }
 
@@ -366,7 +364,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
 
     @Override
     public void onCheckedChange(int checkedPosition, boolean byUser) {
-        layoutViewpage.setCurrentItem(checkedPosition);
+        layoutViewpage.setCurrentItem(checkedPosition,false);
     }
 
     public class MyContactListener implements EMContactListener {

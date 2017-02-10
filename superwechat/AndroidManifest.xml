@@ -44,7 +44,6 @@
         android:protectionLevel="signatureOrSystem" />
 
     <uses-permission android:name="cn.ucai.superwechat.permission.MIPUSH_RECEIVE" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -456,7 +455,7 @@
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="i#superwechat201610" />
-        <!--easemob-demo#chatdemoui-->
+        <!-- easemob-demo#chatdemoui -->
         <!-- 声明sdk所需的service -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
@@ -497,7 +496,8 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="3ecea51f560650b1ed8a4b99808f52e8" />
 
-        <activity android:name=".ui.GuideActivity"></activity>
+        <activity android:name=".ui.GuideActivity" />
+        <activity android:name=".ui.SettingActivity"></activity>
     </application>
 
 </manifest>

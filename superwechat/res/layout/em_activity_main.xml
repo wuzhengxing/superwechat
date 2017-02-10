@@ -37,7 +37,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawableTop="@drawable/tab_weixin"
-                app:tabtext="@string/app_name">
+                app:tabtext="@string/app_name"
+                >
             </cn.ucai.superwechat.widget.DMTabButton>
             <cn.ucai.superwechat.widget.DMTabButton
                 android:layout_width="match_parent"
