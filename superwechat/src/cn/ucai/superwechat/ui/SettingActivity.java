@@ -2,26 +2,30 @@ package cn.ucai.superwechat.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.easemob.redpacketui.utils.RedPacketUtil;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.easeui.widget.EaseSwitchButton;
 import com.hyphenate.util.EMLog;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.SuperWeChatModel;
@@ -29,10 +33,7 @@ import cn.ucai.superwechat.utils.DisplayUtils;
 import cn.ucai.superwechat.utils.MFGT;
 import cn.ucai.superwechat.utils.PreferenceManager;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
-    /**
-     * new message notification
-     */
+public class SettingActivity extends AppCompatActivity implements OnClickListener {
     private RelativeLayout rl_switch_notification;
     /**
      * sound
@@ -70,7 +71,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private RelativeLayout rl_custom_appkey;
     private RelativeLayout rl_custom_server;
     RelativeLayout rl_push_settings;
-    private LinearLayout   ll_call_option;
+    private LinearLayout ll_call_option;
 
     /**
      * Diagnose
@@ -94,13 +95,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private SuperWeChatModel settingsModel;
     private EMOptions chatOptions;
     private EditText edit_custom_appkey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        if(savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false))
-            return;
+        ButterKnife.bind(this);
         DisplayUtils.initBackWithTitle(this,"设置");
+
         rl_switch_notification = (RelativeLayout) findViewById(R.id.rl_switch_notification);
         rl_switch_sound = (RelativeLayout) findViewById(R.id.rl_switch_sound);
         rl_switch_vibrate = (RelativeLayout) findViewById(R.id.rl_switch_vibrate);
@@ -124,7 +126,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         switch_auto_accept_group_invitation = (EaseSwitchButton) findViewById(R.id.switch_auto_accept_group_invitation);
         switch_adaptive_video_encode = (EaseSwitchButton) findViewById(R.id.switch_adaptive_video_encode);
         logoutBtn = (Button) findViewById(R.id.btn_logout);
-        if(!TextUtils.isEmpty(EMClient.getInstance().getCurrentUser())){
+
+        if (!TextUtils.isEmpty(EMClient.getInstance().getCurrentUser())) {
             logoutBtn.setText(getString(R.string.button_logout) + "(" + EMClient.getInstance().getCurrentUser() + ")");
         }
         customServerSwitch = (EaseSwitchButton) findViewById(R.id.switch_custom_server);
@@ -134,16 +137,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         textview2 = (TextView) findViewById(R.id.textview2);
 
         blacklistContainer = (LinearLayout) findViewById(R.id.ll_black_list);
-        userProfileContainer = (LinearLayout) findViewById(R.id.ll_user_profile);
-        llDiagnose=(LinearLayout) findViewById(R.id.ll_diagnose);
-        pushNick=(LinearLayout) findViewById(R.id.ll_set_push_nick);
+        llDiagnose = (LinearLayout) findViewById(R.id.ll_diagnose);
+        pushNick = (LinearLayout) findViewById(R.id.ll_set_push_nick);
         edit_custom_appkey = (EditText) findViewById(R.id.edit_custom_appkey);
 
         settingsModel = SuperWeChatHelper.getInstance().getModel();
         chatOptions = EMClient.getInstance().getOptions();
 
         blacklistContainer.setOnClickListener(this);
-        userProfileContainer.setOnClickListener(this);
         rl_switch_notification.setOnClickListener(this);
         rl_switch_sound.setOnClickListener(this);
         rl_switch_vibrate.setOnClickListener(this);
@@ -190,14 +191,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         // if allow owner leave
-        if(settingsModel.isChatroomOwnerLeaveAllowed()){
+        if (settingsModel.isChatroomOwnerLeaveAllowed()) {
             ownerLeaveSwitch.openSwitch();
-        }else{
+        } else {
             ownerLeaveSwitch.closeSwitch();
         }
 
         // delete messages when exit group?
-        if(settingsModel.isDeleteMessagesAsExitGroup()){
+        if (settingsModel.isDeleteMessagesAsExitGroup()) {
             switch_delete_msg_when_exit_group.openSwitch();
         } else {
             switch_delete_msg_when_exit_group.closeSwitch();
@@ -217,9 +218,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
         }
 
-        if(settingsModel.isCustomServerEnable()){
+        if (settingsModel.isCustomServerEnable()) {
             customServerSwitch.openSwitch();
-        }else{
+        } else {
             customServerSwitch.closeSwitch();
         }
 
@@ -233,9 +234,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         edit_custom_appkey.setText(settingsModel.getCutomAppkey());
         edit_custom_appkey.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 PreferenceManager.getInstance().setCustomAppkey(s.toString());
@@ -243,11 +248,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //end of red packet code
             case R.id.rl_switch_notification:
                 if (notifySwitch.isSwitchOpen()) {
                     notifySwitch.closeSwitch();
@@ -293,33 +296,33 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.rl_switch_chatroom_owner_leave:
-                if(ownerLeaveSwitch.isSwitchOpen()){
+                if (ownerLeaveSwitch.isSwitchOpen()) {
                     ownerLeaveSwitch.closeSwitch();
                     settingsModel.allowChatroomOwnerLeave(false);
                     chatOptions.allowChatroomOwnerLeave(false);
-                }else{
+                } else {
                     ownerLeaveSwitch.openSwitch();
                     settingsModel.allowChatroomOwnerLeave(true);
                     chatOptions.allowChatroomOwnerLeave(true);
                 }
                 break;
             case R.id.rl_switch_delete_msg_when_exit_group:
-                if(switch_delete_msg_when_exit_group.isSwitchOpen()){
+                if (switch_delete_msg_when_exit_group.isSwitchOpen()) {
                     switch_delete_msg_when_exit_group.closeSwitch();
                     settingsModel.setDeleteMessagesAsExitGroup(false);
                     chatOptions.setDeleteMessagesAsExitGroup(false);
-                }else{
+                } else {
                     switch_delete_msg_when_exit_group.openSwitch();
                     settingsModel.setDeleteMessagesAsExitGroup(true);
                     chatOptions.setDeleteMessagesAsExitGroup(true);
                 }
                 break;
             case R.id.rl_switch_auto_accept_group_invitation:
-                if(switch_auto_accept_group_invitation.isSwitchOpen()){
+                if (switch_auto_accept_group_invitation.isSwitchOpen()) {
                     switch_auto_accept_group_invitation.closeSwitch();
                     settingsModel.setAutoAcceptGroupInvitation(false);
                     chatOptions.setAutoAcceptGroupInvitation(false);
-                }else{
+                } else {
                     switch_auto_accept_group_invitation.openSwitch();
                     settingsModel.setAutoAcceptGroupInvitation(true);
                     chatOptions.setAutoAcceptGroupInvitation(true);
@@ -327,12 +330,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.rl_switch_adaptive_video_encode:
                 EMLog.d("switch", "" + !switch_adaptive_video_encode.isSwitchOpen());
-                if (switch_adaptive_video_encode.isSwitchOpen()){
+                if (switch_adaptive_video_encode.isSwitchOpen()) {
                     switch_adaptive_video_encode.closeSwitch();
                     settingsModel.setAdaptiveVideoEncode(false);
                     EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(true);
 
-                }else{
+                } else {
                     switch_adaptive_video_encode.openSwitch();
                     settingsModel.setAdaptiveVideoEncode(true);
                     EMClient.getInstance().callManager().getCallOptions().enableFixedVideoResolution(false);
@@ -353,24 +356,20 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.ll_call_option:
                 startActivity(new Intent(this, CallOptionActivity.class));
                 break;
-            case R.id.ll_user_profile:
-                startActivity(new Intent(this, UserProfileActivity.class).putExtra("setting", true)
-                        .putExtra("username", EMClient.getInstance().getCurrentUser()));
-                break;
             case R.id.switch_custom_server:
-                if(customServerSwitch.isSwitchOpen()){
+                if (customServerSwitch.isSwitchOpen()) {
                     customServerSwitch.closeSwitch();
                     settingsModel.enableCustomServer(false);
-                }else{
+                } else {
                     customServerSwitch.openSwitch();
                     settingsModel.enableCustomServer(true);
                 }
                 break;
             case R.id.switch_custom_appkey:
-                if(customAppkeySwitch.isSwitchOpen()){
+                if (customAppkeySwitch.isSwitchOpen()) {
                     customAppkeySwitch.closeSwitch();
                     settingsModel.enableCustomAppkey(false);
-                }else{
+                } else {
                     customAppkeySwitch.openSwitch();
                     settingsModel.enableCustomAppkey(true);
                 }
@@ -394,17 +393,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         pd.setMessage(st);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
-        SuperWeChatHelper.getInstance().logout(false,new EMCallBack() {
+        SuperWeChatHelper.getInstance().logout(false, new EMCallBack() {
 
             @Override
             public void onSuccess() {
-               runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     public void run() {
                         pd.dismiss();
                         // show login screen
-                       finish();
-                       MFGT.gotoLogin(SettingActivity.this);
-
+                        finish();
+                        MFGT.gotoLoginCleanTask(SettingActivity.this);
                     }
                 });
             }
