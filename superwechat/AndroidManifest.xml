@@ -77,6 +77,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/horizontal_slide"
             android:windowSoftInputMode="adjustResize|stateVisible" />
+        <!-- 设置 -->
+
 
         <!-- 注册 -->
         <activity

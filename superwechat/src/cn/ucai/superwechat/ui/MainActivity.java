@@ -171,6 +171,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         layoutViewpage.setAdapter(adapter);
         layoutViewpage.setCurrentItem(0);
         Log.e(TAG, "initFragment");
+        layoutTabHost.setChecked(0);
         layoutViewpage.setOnPageChangeListener(this);
         layoutTabHost.setOnCheckedChangeListener(this);
 
