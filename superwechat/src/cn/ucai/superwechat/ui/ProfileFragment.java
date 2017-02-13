@@ -57,6 +57,12 @@ public class ProfileFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.getBoolean("isConflict", false))
             return;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initData();
     }
 
