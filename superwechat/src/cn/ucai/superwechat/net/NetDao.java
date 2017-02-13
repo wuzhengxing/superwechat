@@ -3,6 +3,8 @@ package cn.ucai.superwechat.net;
 import android.content.Context;
 import android.media.MediaPlayer;
 
+import java.io.File;
+
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.utils.MD5;
 import cn.ucai.superwechat.utils.OkHttpUtils;
@@ -50,6 +52,16 @@ public class NetDao {
                 .addParam(I.User.USER_NAME,userName)
                 .addParam(I.User.NICK,userNick)
                 .targetClass(String.class)
+                .execute(listener);
+    }
+    public static void updateUserAvatar(Context context, String userName, File file, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils=new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_UPDATE_AVATAR)
+                .addParam(I.NAME_OR_HXID,userName)
+                .addParam(I.AVATAR_TYPE,I.AVATAR_TYPE_USER_PATH)
+                .addFile2(file)
+                .targetClass(String.class)
+                .post()
                 .execute(listener);
     }
 }

@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,9 +27,15 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.domain.User;
+import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -221,7 +228,8 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                 break;
             case REQUESTCODE_CUTTING:
                 if (data != null) {
-                    setPicToView(data);
+                    //setPicToView(data);
+                    uploadAppUserAvatar(data);
                 }
                 break;
             default:
@@ -255,8 +263,72 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
             Drawable drawable = new BitmapDrawable(getResources(), photo);
             ivAvatar.setImageDrawable(drawable);
             uploadUserAvatar(Bitmap2Bytes(photo));
+            uploadAppUserAvatar(picdata);
         }
 
+    }
+
+    private void uploadAppUserAvatar(Intent picdata) {
+        File file = saveBitmapFile(picdata);
+        dialog = ProgressDialog.show(this, getString(R.string.dl_update_photo), getString(R.string.dl_waiting));
+        NetDao.updateUserAvatar(this, username, file, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String str) {
+                dialog.dismiss();
+                if (str != null) {
+                    Result result = ResultUtils.getResultFromJson(str, User.class);
+                    if (result != null) {
+                        if (result.isRetMsg()) {
+                            User user = (User) result.getRetData();
+                            PreferenceManager.getInstance().setCurrentUserAvatar(user.getAvatar());
+                            SuperWeChatHelper.getInstance().saveAppContact(user);
+                            EaseUserUtils.setAppUserAvatar(UserProfileActivity.this,username,ivAvatar);
+                            CommonUtils.showShortToast(R.string.toast_updatephoto_success);
+                        } else {
+                            if (result.getRetCode() == I.MSG_REGISTER_UPLOAD_AVATAR_FAIL) {
+                                CommonUtils.showShortToast("上传头像失败");
+                            } else {
+                                CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+                            }
+                        }
+                    }else {
+                        CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+                    }
+                } else {
+                    CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e(TAG, "error:" + error);
+                CommonUtils.showShortToast(R.string.toast_updatephoto_fail);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private File saveBitmapFile(Intent picdata) {
+        Bundle extras=picdata.getExtras();
+        if(extras!=null){
+            Bitmap bitmap = extras.getParcelable("data");
+            String imagePath= EaseImageUtils.getImagePath(username+I.AVATAR_SUFFIX_JPG);
+            File file = new File(imagePath);//将要保存头像的路径
+            Log.e(TAG, "file:" + file.getAbsolutePath());
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                bos.flush();
+                bos.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return file;
+        }
+
+        return null;
     }
 
     private void uploadUserAvatar(final byte[] data) {
