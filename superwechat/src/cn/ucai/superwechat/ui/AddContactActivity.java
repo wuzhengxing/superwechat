@@ -16,6 +16,7 @@ package cn.ucai.superwechat.ui;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,10 +27,18 @@ import android.widget.Toast;
 import com.hyphenate.chat.EMClient;
 import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.domain.Result;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
+import com.hyphenate.easeui.domain.User;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 
 public class AddContactActivity extends BaseActivity{
+	private static final String TAG = "AddContactActivity";
 	private EditText editText;
 	private RelativeLayout searchedUserLayout;
 	private TextView nameText;
@@ -72,12 +81,55 @@ public class AddContactActivity extends BaseActivity{
 			// TODO you can search the user from your app server here.
 			
 			//show the userame and add button if user exist
-			searchedUserLayout.setVisibility(View.VISIBLE);
-			nameText.setText(toAddUsername);
-			
+
+			//nameText.setText(toAddUsername);
+			progressDialog = new ProgressDialog(this);
+			String stri = getResources().getString(R.string.Is_sending_a_request);
+			progressDialog.setMessage(stri);
+			progressDialog.setCanceledOnTouchOutside(false);
+			progressDialog.show();
+			searchAppContact(name);
 		} 
-	}	
-	
+	}
+
+	private void searchAppContact(String name) {
+		if(EMClient.getInstance().getCurrentUser().equals(name)){
+			new EaseAlertDialog(this, R.string.not_add_myself).show();
+			progressDialog.dismiss();
+			return;
+		}
+		NetDao.getUserInfoByUserName(this, name, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String str) {
+				progressDialog.dismiss();
+				boolean isSuccess = false;
+				if(str!=null){
+					Result result = ResultUtils.getResultFromJson(str, User.class);
+					if(result!=null){
+						if (result.isRetMsg()) {
+							User user = (User) result.getRetData();
+							if(user!=null){
+								isSuccess = true;
+								searchedUserLayout.setVisibility(View.GONE);
+								MFGT.gotoFriend(AddContactActivity.this, user);
+							}
+						}
+					}
+				}
+				if(!isSuccess){
+					searchedUserLayout.setVisibility(View.VISIBLE);
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+				progressDialog.dismiss();
+				Log.e(TAG, "error:" + error);
+				CommonUtils.showShortToast("查找用户失败");
+			}
+		});
+	}
+
 	/**
 	 *  add contact
 	 * @param view
@@ -98,11 +150,7 @@ public class AddContactActivity extends BaseActivity{
 			return;
 		}
 		
-		progressDialog = new ProgressDialog(this);
-		String stri = getResources().getString(R.string.Is_sending_a_request);
-		progressDialog.setMessage(stri);
-		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.show();
+
 		
 		new Thread(new Runnable() {
 			public void run() {
