@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.redpacketsdk.constant.RPConstant;
@@ -455,7 +456,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * update unread message count
      */
     public void updateUnreadLabel() {
-        /*int count = getUnreadMsgCountTotal();
+       /* int count = getUnreadMsgCountTotal();
         if (count > 0) {
 			unreadLabel.setText(String.valueOf(count));
 			unreadLabel.setVisibility(View.VISIBLE);
@@ -468,16 +469,19 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
      * update the total unread count
      */
     public void updateUnreadAddressLable() {
-		/*runOnUiThread(new Runnable() {
-			public void run() {
-				int count = getUnreadAddressCountTotal();
-				if (count > 0) {
-					unreadAddressLable.setVisibility(View.VISIBLE);
-				} else {
-					unreadAddressLable.setVisibility(View.INVISIBLE);
-				}
-			}
-		});*/
+        runOnUiThread(new Runnable() {
+            public void run() {
+                int count = getUnreadAddressCountTotal();
+                Log.e(TAG, "updateUnreadAddressLable-count:" + count);
+                if (count > 1) {
+                    layoutTabHost.setUnreadCount(1, count);
+                } else if (count == 1) {
+                    layoutTabHost.setHasNew(1, true);
+                } else {
+                    layoutTabHost.setHasNew(1, false);
+                }
+            }
+        });
 
     }
 

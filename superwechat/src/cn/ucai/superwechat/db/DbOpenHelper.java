@@ -36,6 +36,9 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 			+ InviteMessgeDao.COLUMN_NAME_FROM + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_GROUP_ID + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_GROUP_Name + " TEXT, "
+			+ InviteMessgeDao.COLUMN_NAME_NICK_Name + " TEXT, "
+			+ InviteMessgeDao.COLUMN_NAME_AVATAR_SUFFIX + " TEXT, "
+			+ InviteMessgeDao.COLUMN_NAME_AVATAR_TIME + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_REASON + " TEXT, "
 			+ InviteMessgeDao.COLUMN_NAME_STATUS + " INTEGER, "
 			+ InviteMessgeDao.COLUMN_NAME_ISINVITEFROMME + " INTEGER, "
@@ -76,7 +79,6 @@ public class DbOpenHelper extends SQLiteOpenHelper{
 		db.execSQL(CREATE_PREF_TABLE);
 		db.execSQL(ROBOT_TABLE_CREATE);
 		db.execSQL(USER_TABLE_CREATE);
-		
 	}
 
 	@Override

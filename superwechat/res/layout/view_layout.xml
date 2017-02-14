@@ -45,12 +45,12 @@
         android:visibility="visible" />
 
     <TextView
+        android:layout_centerVertical="true"
         android:id="@+id/txt_right"
         style="@style/txt_titleStyle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
         android:text="@string/add_friend"
         android:textSize="16sp"
         android:visibility="gone" />

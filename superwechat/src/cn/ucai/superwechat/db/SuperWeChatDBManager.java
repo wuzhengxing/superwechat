@@ -185,6 +185,11 @@ public class SuperWeChatDBManager {
             values.put(InviteMessgeDao.COLUMN_NAME_FROM, message.getFrom());
             values.put(InviteMessgeDao.COLUMN_NAME_GROUP_ID, message.getGroupId());
             values.put(InviteMessgeDao.COLUMN_NAME_GROUP_Name, message.getGroupName());
+
+            values.put(InviteMessgeDao.COLUMN_NAME_NICK_Name, message.getNickname());
+            values.put(InviteMessgeDao.COLUMN_NAME_AVATAR_SUFFIX, message.getAvatarSuffix());
+            values.put(InviteMessgeDao.COLUMN_NAME_AVATAR_TIME, message.getAvatarTime());
+
             values.put(InviteMessgeDao.COLUMN_NAME_REASON, message.getReason());
             values.put(InviteMessgeDao.COLUMN_NAME_TIME, message.getTime());
             values.put(InviteMessgeDao.COLUMN_NAME_STATUS, message.getStatus().ordinal());
@@ -228,6 +233,11 @@ public class SuperWeChatDBManager {
                 String from = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_FROM));
                 String groupid = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUP_ID));
                 String groupname = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_GROUP_Name));
+
+                String nickname = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_NICK_Name));
+                String avatarSuffix = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_AVATAR_SUFFIX));
+                String avatarTime = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_AVATAR_TIME));
+
                 String reason = cursor.getString(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_REASON));
                 long time = cursor.getLong(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_TIME));
                 int status = cursor.getInt(cursor.getColumnIndex(InviteMessgeDao.COLUMN_NAME_STATUS));
@@ -237,6 +247,11 @@ public class SuperWeChatDBManager {
                 msg.setFrom(from);
                 msg.setGroupId(groupid);
                 msg.setGroupName(groupname);
+
+                msg.setNickname(nickname);
+                msg.setAvatarSuffix(avatarSuffix);
+                msg.setAvatarTime(avatarTime);
+
                 msg.setReason(reason);
                 msg.setTime(time);
                 msg.setGroupInviter(groupInviter);
