@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_friend_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/common_title" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#ede9e9"/>
+    <RelativeLayout
+        android:id="@+id/layout_profile"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/default_hd_avatar" />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:text="saber"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_nick"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:text="微信号:saber123" />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#ede9e9"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="设置备注和标签"
+        android:textSize="30sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#ede9e9"/>
+    <Button
+        android:visibility="gone"
+        android:id="@+id/bt_send_msg"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="#10bc0d"
+        android:text="发消息"
+        android:textSize="30sp" />
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/bt_add_card"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="#10bc0d"
+        android:text="添加到通讯录"
+        android:textSize="30sp" />
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/bt_record_video"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="#10bc0d"
+        android:text="发起视频聊天"
+        android:textSize="30sp" />
+</LinearLayout>
