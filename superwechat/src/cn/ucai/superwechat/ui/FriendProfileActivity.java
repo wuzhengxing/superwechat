@@ -19,7 +19,7 @@ import cn.ucai.superwechat.SuperWeChatHelper;
 import cn.ucai.superwechat.utils.DisplayUtils;
 import cn.ucai.superwechat.utils.MFGT;
 
-public class FriendProfileActivity extends Activity {
+public class FriendProfileActivity extends BaseActivity {
     private static final String TAG = "FriendProfileActivity";
     @BindView(R.id.iv_avatar)
     ImageView ivAvatar;
@@ -82,6 +82,7 @@ public class FriendProfileActivity extends Activity {
             case R.id.bt_send_msg:
                 break;
             case R.id.bt_add_card:
+                MFGT.gotoAddFriend(this,user.getMUserName());
                 break;
             case R.id.bt_record_video:
                 break;
