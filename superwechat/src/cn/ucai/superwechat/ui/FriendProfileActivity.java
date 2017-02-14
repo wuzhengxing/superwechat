@@ -2,6 +2,7 @@ package cn.ucai.superwechat.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,8 +17,12 @@ import butterknife.OnClick;
 import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
 import cn.ucai.superwechat.SuperWeChatHelper;
+import cn.ucai.superwechat.domain.Result;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.DisplayUtils;
 import cn.ucai.superwechat.utils.MFGT;
+import cn.ucai.superwechat.utils.ResultUtils;
 
 public class FriendProfileActivity extends BaseActivity {
     private static final String TAG = "FriendProfileActivity";
@@ -46,13 +51,44 @@ public class FriendProfileActivity extends BaseActivity {
     }
 
     private void initData() {
-         user = (User) getIntent().getSerializableExtra(I.User.USER_NAME);
+         user = (User) getIntent().getSerializableExtra(I.User.TABLE_NAME);
         if (user != null) {
            showUserInfo();
         } else {
-            MFGT.finish(this);
+            String username = getIntent().getStringExtra(I.User.USER_NAME);
+            if(username==null){
+                MFGT.finish(this);
+            }else {
+                syncUserInfo(username);
+            }
         }
 
+    }
+
+    private void syncUserInfo(String username) {
+        NetDao.getUserInfoByUserName(this, username, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String str) {
+                if(str!=null){
+                    Result result = ResultUtils.getResultFromJson(str, User.class);
+                    if(result!=null){
+                        if (result.isRetMsg()) {
+                            User u = (User) result.getRetData();
+                            if(u!=null){
+                                user=u;
+                                showUserInfo();
+                                Log.e(TAG, "user:" + user);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     private void showUserInfo() {
