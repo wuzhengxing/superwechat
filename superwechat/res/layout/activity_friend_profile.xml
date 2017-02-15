@@ -87,7 +87,8 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:background="#10bc0d"
         android:text="发起视频聊天"
-        android:textSize="30sp" />
+        android:background="#fff"
+        android:textSize="30sp"
+        />
 </LinearLayout>
