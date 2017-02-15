@@ -34,6 +34,8 @@ public class AddFriendActivity extends BaseActivity {
     ImageView add;
 
     String username;
+    @BindView(R.id.txt_left)
+    TextView txtLeft;
 
 
     @Override
@@ -56,6 +58,7 @@ public class AddFriendActivity extends BaseActivity {
     }
 
     private void initView() {
+        txtLeft.setVisibility(View.GONE);
         imgBack.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(View.VISIBLE);
         txtTitle.setText(R.string.addcontact_title);

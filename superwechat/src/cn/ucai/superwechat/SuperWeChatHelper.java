@@ -665,7 +665,7 @@ public class SuperWeChatHelper {
     public class MyContactListener implements EMContactListener {
 
         @Override
-        public void onContactAdded(String username) {
+        public void onContactAdded(final String username) {
             // save contact
             Map<String, EaseUser> localUsers = getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
@@ -677,6 +677,30 @@ public class SuperWeChatHelper {
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
 
+            NetDao.addContact(appContext, EMClient.getInstance().getCurrentUser(), username, new OnCompleteListener<String>() {
+                @Override
+                public void onSuccess(String str) {
+                    if(str!=null){
+                        Result result = ResultUtils.getResultFromJson(str, User.class);
+                        if (result != null) {
+                            if (result.isRetMsg()) {
+                                User user = (User) result.getRetData();
+                                Log.e(TAG, "MyContactListener -user:" + user);
+                                if (!getAppContactList().containsKey(username)) {
+                                    getAppContactList().put(username, user);
+                                    userDao.saveAppContact(user);
+                                    broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(String error) {
+
+                }
+            });
             broadcastManager.sendBroadcast(new Intent(Constant.ACTION_CONTACT_CHANAGED));
         }
 
