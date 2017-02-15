@@ -241,7 +241,8 @@ public class EaseContactListFragment extends EaseBaseFragment {
                 if (!entry.getKey().equals("item_new_friends")
                         && !entry.getKey().equals("item_groups")
                         && !entry.getKey().equals("item_chatroom")
-                        && !entry.getKey().equals("item_robots")){
+                        && !entry.getKey().equals("item_robots")
+                        && !entry.getKey().equals(EMClient.getInstance().getCurrentUser())){
                     if(!blackList.contains(entry.getKey())){
                         //filter out users in blacklist
                         User user = entry.getValue();
