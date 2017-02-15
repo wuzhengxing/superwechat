@@ -116,6 +116,7 @@ public class FriendProfileActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bt_send_msg:
+                MFGT.gotoChat(this,user.getMUserName());
                 break;
             case R.id.bt_add_card:
                 MFGT.gotoAddFriend(this,user.getMUserName());
