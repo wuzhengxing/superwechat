@@ -123,7 +123,7 @@ public class FriendProfileActivity extends BaseActivity {
                 MFGT.gotoAddFriend(this,user.getMUserName());
                 break;
             case R.id.bt_record_video:
-                startActivity(new Intent(this, VoiceCallActivity.class)
+                startActivity(new Intent(this, VideoCallActivity.class)
                         .putExtra("username", user.getMUserName())
                         .putExtra("isComingCall", false));
         }
