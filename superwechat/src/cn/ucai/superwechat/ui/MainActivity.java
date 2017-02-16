@@ -345,16 +345,16 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
             public void onReceive(Context context, Intent intent) {
                 updateUnreadLabel();
                 updateUnreadAddressLable();
-                if (currentTabIndex == 0) {
-                    // refresh conversation list
-                    if (conversationListFragment != null) {
-                        conversationListFragment.refresh();
-                    }
-                } else if (currentTabIndex == 1) {
-                    if (contactListFragment != null) {
-                        contactListFragment.refresh();
-                    }
+
+                // refresh conversation list
+                if (conversationListFragment != null) {
+                    conversationListFragment.refresh();
+
                 }
+                if (contactListFragment != null) {
+                    contactListFragment.refresh();
+                }
+
                 String action = intent.getAction();
                 if (action.equals(Constant.ACTION_GROUP_CHANAGED)) {
                     if (EaseCommonUtils.getTopActivity(MainActivity.this).equals(GroupsActivity.class.getName())) {
@@ -628,7 +628,7 @@ public class MainActivity extends BaseActivity implements DMTabHost.OnCheckedCha
         showExceptionDialogFromIntent(intent);
         boolean isChat = intent.getBooleanExtra(I.BACK_MAIN_FROM_CHAT, false);
         Log.e(TAG, "onNewIntent...isChat:" + isChat);
-        if(isChat){
+        if (isChat) {
             layoutTabHost.setChecked(0);
         }
     }
