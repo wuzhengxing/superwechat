@@ -55,8 +55,6 @@ import static cn.ucai.superwechat.R.id.username;
 
 public class UserProfileActivity extends BaseActivity implements OnClickListener {
     private static final String TAG = "UserProfileActivity";
-    private static final int REQUESTCODE_PICK = 1;
-    private static final int REQUESTCODE_CUTTING = 2;
     @BindView(R.id.iv_avatar)
     ImageView ivAvatar;
     @BindView(R.id.tv_nick)
@@ -135,7 +133,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
                             case 1:
                                 Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
                                 pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                                startActivityForResult(pickIntent, REQUESTCODE_PICK);
+                                startActivityForResult(pickIntent, I.REQUESTCODE_PICK);
                                 break;
                             default:
                                 break;
@@ -220,13 +218,13 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUESTCODE_PICK:
+            case I.REQUESTCODE_PICK:
                 if (data == null || data.getData() == null) {
                     return;
                 }
                 startPhotoZoom(data.getData());
                 break;
-            case REQUESTCODE_CUTTING:
+            case I.REQUESTCODE_CUTTING:
                 if (data != null) {
                     //setPicToView(data);
                     uploadAppUserAvatar(data);
@@ -248,7 +246,7 @@ public class UserProfileActivity extends BaseActivity implements OnClickListener
         intent.putExtra("outputY", 300);
         intent.putExtra("return-data", true);
         intent.putExtra("noFaceDetection", true);
-        startActivityForResult(intent, REQUESTCODE_CUTTING);
+        startActivityForResult(intent, I.REQUESTCODE_CUTTING);
     }
 
     /**
