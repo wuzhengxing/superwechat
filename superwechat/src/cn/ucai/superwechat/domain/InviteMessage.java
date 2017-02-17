@@ -25,6 +25,22 @@ public class InviteMessage {
 	private String groupName;
 	private String groupInviter;
 
+	@Override
+	public String toString() {
+		return "InviteMessage{" +
+				"from='" + from + '\'' +
+				", time=" + time +
+				", reason='" + reason + '\'' +
+				", nickname='" + nickname + '\'' +
+				", avatarSuffix='" + avatarSuffix + '\'' +
+				", avatarTime='" + avatarTime + '\'' +
+				", status=" + status +
+				", groupId='" + groupId + '\'' +
+				", groupName='" + groupName + '\'' +
+				", groupInviter='" + groupInviter + '\'' +
+				", id=" + id +
+				'}';
+	}
 
 	private int id;
 	

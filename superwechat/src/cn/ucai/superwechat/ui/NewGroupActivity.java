@@ -40,6 +40,7 @@ import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.chat.EMGroupManager.EMGroupOptions;
 import com.hyphenate.chat.EMGroupManager.EMGroupStyle;
 import com.hyphenate.easeui.domain.Group;
+import com.hyphenate.easeui.domain.Member;
 import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.exceptions.HyphenateException;
@@ -49,6 +50,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +109,7 @@ public class NewGroupActivity extends BaseActivity {
             new EaseAlertDialog(this, R.string.Group_name_cannot_be_empty).show();
         } else {
             // select from contact list
-            startActivityForResult(new Intent(this, GroupPickContactsActivity.class).putExtra("groupName", name),I.REQUESTCODE_MEMBER);
+            startActivityForResult(new Intent(this, GroupPickContactsActivity.class).putExtra("groupName", name), I.REQUESTCODE_MEMBER);
         }
     }
 
@@ -167,7 +170,7 @@ public class NewGroupActivity extends BaseActivity {
                     }
                     EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
 
-                    createAppGroup(group);
+                    createAppGroup(group, members);
 
                 } catch (final HyphenateException e) {
                     runOnUiThread(new Runnable() {
@@ -182,7 +185,7 @@ public class NewGroupActivity extends BaseActivity {
         }).start();
     }
 
-    private void createAppGroup(EMGroup group) {
+    private void createAppGroup(final EMGroup group, final String[] members) {
         NetDao.createGroup(this, group, file, new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String str) {
@@ -191,7 +194,12 @@ public class NewGroupActivity extends BaseActivity {
                     Result result = ResultUtils.getResultFromJson(str, Group.class);
                     if (result != null) {
                         if (result.isRetMsg()) {
-                            createGroupSuccess();
+                            Log.e(TAG, "group.getMemberCount:" + group.getMemberCount());
+                            if (members!=null && members.length>0) {
+                                addGroupMember(group.getGroupId(), members);
+                            } else {
+                                createGroupSuccess();
+                            }
                         } else {
                             progressDialog.dismiss();
                             if (result.getRetCode() == I.MSG_GROUP_HXID_EXISTS) {
@@ -215,6 +223,46 @@ public class NewGroupActivity extends BaseActivity {
         });
     }
 
+    private void addGroupMember(String hxid, String[] members) {
+        NetDao.addGroupMembers(this, getGroupMembers(members), hxid, new OnCompleteListener<String>() {
+            @Override
+            public void onSuccess(String str) {
+                boolean success = false;
+                Log.e(TAG, "addGroupMember---str:" + str);
+                if (str != null) {
+                    Result result = ResultUtils.getResultFromJson(str, Group.class);
+                    if (result != null && result.isRetMsg()) {
+                        createGroupSuccess();
+                        success = true;
+                    }
+                }
+                if (!success) {
+                    progressDialog.dismiss();
+                    CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                progressDialog.dismiss();
+                Log.e(TAG, "error:" + error);
+                CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+            }
+        });
+    }
+
+
+    private String getGroupMembers(String[] members) {
+        String membersStr = "";
+        if (members.length > 0) {
+            for (String s : members) {
+                membersStr += s + ",";
+            }
+        }
+        Log.e(TAG, "getGroupMembers---membersStr:" + membersStr);
+        return membersStr;
+    }
+
     private void createGroupSuccess() {
         runOnUiThread(new Runnable() {
             public void run() {
@@ -224,7 +272,6 @@ public class NewGroupActivity extends BaseActivity {
             }
         });
     }
-
 
 
     public void back(View view) {
@@ -272,12 +319,12 @@ public class NewGroupActivity extends BaseActivity {
     }
 
     private void saveBitmapFile(Intent picdata) {
-        Bundle extras=picdata.getExtras();
-        if(extras!=null){
+        Bundle extras = picdata.getExtras();
+        if (extras != null) {
             Bitmap bitmap = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(getResources(), bitmap);
             ivGroupAvatar.setImageDrawable(drawable);
-            String imagePath= EaseImageUtils.getImagePath(EMClient.getInstance().getCurrentUser()+I.AVATAR_SUFFIX_JPG);
+            String imagePath = EaseImageUtils.getImagePath(EMClient.getInstance().getCurrentUser() + I.AVATAR_SUFFIX_JPG);
             file = new File(imagePath);//将要保存头像的路径
             Log.e(TAG, "file:" + file.getAbsolutePath());
             try {

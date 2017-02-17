@@ -768,9 +768,11 @@ public class SuperWeChatHelper {
      * @param msg
      */
     private void notifyNewInviteMessage(final InviteMessage msg) {
+        Log.e(TAG, "group.getMemberCount()");
         if (inviteMessgeDao == null) {
             inviteMessgeDao = new InviteMessgeDao(appContext);
         }
+        if(msg.getGroupId()==null){
         NetDao.getUserInfoByUserName(appContext, msg.getFrom(), new OnCompleteListener<String>() {
             @Override
             public void onSuccess(String str) {
@@ -796,7 +798,7 @@ public class SuperWeChatHelper {
             public void onError(String error) {
                 inviteMessgeDao.saveMessage(msg);
             }
-        });
+        });}
         //increase the unread message count
         inviteMessgeDao.saveUnreadMessageCount(1);
         // notify there is new message
