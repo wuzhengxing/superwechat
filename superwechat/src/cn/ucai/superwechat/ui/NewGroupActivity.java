@@ -17,28 +17,44 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager.EMGroupOptions;
 import com.hyphenate.chat.EMGroupManager.EMGroupStyle;
+
+import cn.ucai.superwechat.I;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.domain.Result;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
+import cn.ucai.superwechat.utils.CommonUtils;
+import cn.ucai.superwechat.utils.ResultUtils;
+
+import com.hyphenate.easeui.domain.Group;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.exceptions.HyphenateException;
 
+import java.io.File;
+
 public class NewGroupActivity extends BaseActivity {
+	private static final String TAG = "NewGroupActivity";
 	private EditText groupNameEditText;
 	private ProgressDialog progressDialog;
 	private EditText introductionEditText;
 	private CheckBox publibCheckBox;
 	private CheckBox memberCheckbox;
 	private TextView secondTextView;
+	private ImageView ivGroupAvatar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +62,7 @@ public class NewGroupActivity extends BaseActivity {
 		setContentView(R.layout.em_activity_new_group);
 		groupNameEditText = (EditText) findViewById(R.id.edit_group_name);
 		introductionEditText = (EditText) findViewById(R.id.edit_group_introduction);
+		ivGroupAvatar = (ImageView) findViewById(R.id.iv_group_avatar);
 		publibCheckBox = (CheckBox) findViewById(R.id.cb_public);
 		memberCheckbox = (CheckBox) findViewById(R.id.cb_member_inviter);
 		secondTextView = (TextView) findViewById(R.id.second_desc);
@@ -106,14 +123,10 @@ public class NewGroupActivity extends BaseActivity {
 						}else{
 						    option.style = memberCheckbox.isChecked()?EMGroupStyle.EMGroupStylePrivateMemberCanInvite:EMGroupStyle.EMGroupStylePrivateOnlyOwnerInvite;
 						}
-                        EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
-						runOnUiThread(new Runnable() {
-							public void run() {
-								progressDialog.dismiss();
-								setResult(RESULT_OK);
-								finish();
-							}
-						});
+						EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, members, reason, option);
+
+						createAppGroup(group);
+
 					} catch (final HyphenateException e) {
 						runOnUiThread(new Runnable() {
 							public void run() {
@@ -126,6 +139,50 @@ public class NewGroupActivity extends BaseActivity {
 				}
 			}).start();
 		}
+	}
+
+	private void createAppGroup(EMGroup group) {
+		File file=null;
+		NetDao.createGroup(this, group, file, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String str) {
+				if(str!=null){
+					Log.e(TAG, "createAppGroup---str:" + str);
+					Result result = ResultUtils.getResultFromJson(str, Group.class);
+					if (result != null) {
+						if (result.isRetMsg()) {
+							createGroupSuccess();
+						}else {
+							progressDialog.dismiss();
+							if (result.getRetCode() == I.MSG_GROUP_HXID_EXISTS) {
+								CommonUtils.showShortToast("群组环信ID已存在");
+							}
+							if (result.getRetCode() == I.MSG_GROUP_CREATE_FAIL) {
+								CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+							}
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onError(String error) {
+				progressDialog.dismiss();
+				Log.e(TAG, "error:" + error);
+				CommonUtils.showShortToast(R.string.Failed_to_create_groups);
+
+			}
+		});
+	}
+
+	private void createGroupSuccess() {
+		runOnUiThread(new Runnable() {
+            public void run() {
+                progressDialog.dismiss();
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
 	}
 
 	public void back(View view) {
