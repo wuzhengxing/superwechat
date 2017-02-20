@@ -91,26 +91,30 @@ public class EaseUserUtils {
     public static void setAppUserAvatar(Context context, String username, ImageView imageView){
        User user = getAppUserInfo(username);
         if(user != null && user.getAvatar() != null){
-            setAppUserAvatarBypath(context,user.getAvatar(),imageView);
+            setAppUserAvatarBypath(context,user.getAvatar(),imageView,null);
         }else if(username!=null){
             user=new User(username);
-            setAppUserAvatarBypath(context,user.getAvatar(),imageView);
+            setAppUserAvatarBypath(context,user.getAvatar(),imageView,null);
         }
         else{
             Glide.with(context).load(R.drawable.default_hd_avatar).into(imageView);
         }
     }
-    public static void setAppUserAvatarBypath(Context context, String path, ImageView imageView){
+    public static void setAppUserAvatarBypath(Context context, String path, ImageView imageView,String groupId){
+        int drawable_avatar=R.drawable.default_hd_avatar;
+        if(groupId==null){
+            drawable_avatar=R.drawable.ease_group_icon;
+        }
        if(path!=null){
            try {
                int avatarResId = Integer.parseInt(path);
                Glide.with(context).load(avatarResId).into(imageView);
            } catch (Exception e) {
                //use default avatar
-               Glide.with(context).load(path).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.default_hd_avatar).into(imageView);
+               Glide.with(context).load(path).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(drawable_avatar).into(imageView);
            }
        }else{
-           Glide.with(context).load(R.drawable.default_hd_avatar).into(imageView);
+           Glide.with(context).load(drawable_avatar).into(imageView);
        }
     }
 

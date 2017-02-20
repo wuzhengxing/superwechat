@@ -72,9 +72,6 @@ public class NewFriendsMsgActivity extends BaseActivity {
         txtTitle.setText(R.string.Application_and_notify);
     }
 
-    public void back(View view) {
-        finish();
-    }
 
     @OnClick({R.id.img_back, R.id.txt_right})
     public void onClick(View view) {

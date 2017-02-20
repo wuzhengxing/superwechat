@@ -94,7 +94,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			} else{
 				holder.groupContainer.setVisibility(View.GONE);
 			}
-			EaseUserUtils.setAppUserAvatarBypath(context,msg.getAvatar(),holder.avator);
+			EaseUserUtils.setAppUserAvatarBypath(context,msg.getAvatar(),holder.avator,msg.getGroupId());
 			holder.reason.setText(msg.getReason());
 			holder.name.setText(msg.getNickname());
 			// holder.time.setText(DateUtils.getTimestampString(new
@@ -106,7 +106,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 			        msg.getStatus() == InviteMessage.InviteMesageStatus.GROUPINVITATION) {
 			    holder.agree.setVisibility(View.VISIBLE);
                 holder.agree.setEnabled(true);
-//                holder.agree.setBackgroundResource(android.R.drawable.btn_default);
+    //            holder.agree.setBackgroundResource(android.R.drawable.btn_default);
                 holder.agree.setText(str2);
 			    
 				holder.status.setVisibility(View.GONE);
