@@ -112,11 +112,26 @@ public class NetDao {
                 .targetClass(String.class)
                 .execute(listener);
     }
-    public static void removeGroupMembers(Context context, String groupId, String username, OnCompleteListener<String> listener) {
+    public static void removeGroupMembers(Context context, String hxId, String username, OnCompleteListener<String> listener) {
         OkHttpUtils<String> utils=new OkHttpUtils<>(context);
         utils.setRequestUrl(I.REQUEST_DELETE_GROUP_MEMBER)
-                .addParam(I.Member.GROUP_ID,groupId)
+                .addParam(I.Member.GROUP_HX_ID,hxId)
                 .addParam(I.Member.USER_NAME,username)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+    public static void updateGroupName(Context context, String hxId, String newname, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils=new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_UPDATE_GROUP_NAME)
+                .addParam(I.Member.GROUP_HX_ID,hxId)
+                .addParam(I.Member.USER_NAME,newname)
+                .targetClass(String.class)
+                .execute(listener);
+    }
+    public static void deleteGroup(Context context, String hxId, OnCompleteListener<String> listener) {
+        OkHttpUtils<String> utils=new OkHttpUtils<>(context);
+        utils.setRequestUrl(I.REQUEST_DELETE_GROUP)
+                .addParam(I.Member.GROUP_HX_ID,hxId)
                 .targetClass(String.class)
                 .execute(listener);
     }
