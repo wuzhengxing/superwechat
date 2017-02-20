@@ -56,6 +56,7 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.NetUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GroupDetailsActivity extends BaseActivity implements OnClickListener {
@@ -402,6 +403,18 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	 */
 	private void addMembersToGroup(final String[] newmembers) {
 		final String st6 = getResources().getString(R.string.Add_group_members_fail);
+		Log.e(TAG, Arrays.toString(newmembers));
+		NetDao.addGroupMembers(this, Arrays.toString(newmembers), groupId, new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String str) {
+				Log.e(TAG, "addMembersToGroup---str:" + str);
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
 		new Thread(new Runnable() {
 			
 			public void run() {
