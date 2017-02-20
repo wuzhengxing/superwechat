@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +42,8 @@ import com.hyphenate.chat.EMConversation.EMConversationType;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMPushConfigs;
 import cn.ucai.superwechat.R;
+import cn.ucai.superwechat.net.NetDao;
+import cn.ucai.superwechat.net.OnCompleteListener;
 import cn.ucai.superwechat.utils.MFGT;
 
 import com.hyphenate.easeui.utils.EaseUserUtils;
@@ -325,6 +328,17 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 	 */
 	private void exitGrop() {
 		String st1 = getResources().getString(R.string.Exit_the_group_chat_failure);
+		NetDao.removeGroupMembers(GroupDetailsActivity.this, groupId, EMClient.getInstance().getCurrentUser(), new OnCompleteListener<String>() {
+			@Override
+			public void onSuccess(String str) {
+				Log.e(TAG, "exitGrop()---str:" + str);
+			}
+
+			@Override
+			public void onError(String error) {
+
+			}
+		});
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -721,6 +735,17 @@ public class GroupDetailsActivity extends BaseActivity implements OnClickListene
 						deleteDialog.setMessage(st13);
 						deleteDialog.setCanceledOnTouchOutside(false);
 						deleteDialog.show();
+						NetDao.removeGroupMembers(GroupDetailsActivity.this, groupId, username, new OnCompleteListener<String>() {
+							@Override
+							public void onSuccess(String str) {
+								Log.e(TAG, "deleteMembersFromGroup---str:" + str);
+							}
+
+							@Override
+							public void onError(String error) {
+
+							}
+						});
 						new Thread(new Runnable() {
 
 							@Override
