@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.easeui.domain.User;
 
 import cn.ucai.superwechat.I;
@@ -55,7 +56,7 @@ public class MFGT {
         startActivity(activity,new Intent(activity,LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
     }
 
-    public static void gotoUserProfile(FragmentActivity activity) {
+    public static void gotoUserProfile(Activity activity) {
         startActivity(activity, UserProfileActivity.class);
     }
 
@@ -67,7 +68,11 @@ public class MFGT {
        startActivity(activity,new Intent(activity, FriendProfileActivity.class).putExtra(I.User.TABLE_NAME,user));
     }
     public static void gotoFriend(Activity activity, String username) {
-       startActivity(activity,new Intent(activity, FriendProfileActivity.class).putExtra(I.User.USER_NAME,username));
+        if (username.equals(EMClient.getInstance().getCurrentUser())) {
+            gotoUserProfile(activity);
+        }else {
+            startActivity(activity,new Intent(activity, FriendProfileActivity.class).putExtra(I.User.USER_NAME,username));
+        }
     }
 
     public static void gotoAddFriend(Activity activity, String mUserName) {
